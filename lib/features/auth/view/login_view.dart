@@ -2,19 +2,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tweetify/common/common.dart';
 import 'package:tweetify/constants/constants.dart';
+import 'package:tweetify/features/auth/controller/auth_controller.dart';
 import 'package:tweetify/features/auth/view/signup_view.dart';
 import 'package:tweetify/features/auth/widgets/auth_field.dart';
 import 'package:tweetify/theme/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends ConsumerStatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => const LoginView());
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends ConsumerState<LoginView> {
   // by creating an instance of appbar here this will not be rebuilt when the widget is rebuilt
   final appbar = UIConstants.appBar();
   final emailConroller = TextEditingController();
@@ -27,11 +29,20 @@ class _LoginViewState extends State<LoginView> {
     passwordController.dispose();
   }
 
+    void onLogin() {
+    ref.read(authControllerProvider.notifier).signUp(
+          email: emailConroller.text,
+          password: passwordController.text,
+          context: context,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
       appBar: appbar,
-      body: Center(
+      body: isLoading ?const Loader() : Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -52,7 +63,7 @@ class _LoginViewState extends State<LoginView> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: RoundedSmallButton(
-                    onTap: () {},
+                    onTap: onLogin,
                     label: "Login",
                   ),
                 ),

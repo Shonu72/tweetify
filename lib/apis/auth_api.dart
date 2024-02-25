@@ -1,6 +1,6 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:tweetify/core/core.dart';
 import 'package:appwrite/models.dart';
+import 'package:tweetify/core/core.dart';
 // ignore: depend_on_referenced_packages
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod/riverpod.dart';
@@ -40,6 +40,24 @@ class AuthAPI implements IAuthAPI {
         password: password,
       );
       return right(account);
+    } on AppwriteException catch (e, stackTrace) {
+      return left(
+          Failure(e.message ?? 'Some unexpected error occured', stackTrace));
+    } catch (e, stackTrace) {
+      return left(Failure(e.toString(), stackTrace));
+    }
+  }
+// login auth
+  FutureEither<Session> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final session = await _account.createEmailSession(
+        email: email,
+        password: password,
+      );
+      return right(session);
     } on AppwriteException catch (e, stackTrace) {
       return left(
           Failure(e.message ?? 'Some unexpected error occured', stackTrace));
