@@ -22,11 +22,27 @@ abstract class IAuthAPI {
     required String email,
     required String password,
   });
+  FutureEither<Session> login({
+    required String email,
+    required String password,
+  });
+  Future<User?> currentUser();
 }
 
 class AuthAPI implements IAuthAPI {
   final Account _account;
   AuthAPI({required Account account}) : _account = account;
+
+  @override
+  Future<User?> currentUser() async {
+    try {
+      return await _account.get();
+    } on AppwriteException catch (e) {
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 
   @override
   FutureEither<User> signUp({
@@ -47,6 +63,7 @@ class AuthAPI implements IAuthAPI {
       return left(Failure(e.toString(), stackTrace));
     }
   }
+
 // login auth
   FutureEither<Session> login({
     required String email,

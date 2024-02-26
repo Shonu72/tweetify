@@ -29,8 +29,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
     passwordController.dispose();
   }
 
-    void onLogin() {
-    ref.read(authControllerProvider.notifier).signUp(
+  void onLogin() {
+    ref.read(authControllerProvider.notifier).login(
           email: emailConroller.text,
           password: passwordController.text,
           context: context,
@@ -42,64 +42,66 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
       appBar: appbar,
-      body: isLoading ?const Loader() : Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                // textspan
-
-                AuthField(
-                  controller: emailConroller,
-                  hintText: "Email",
-                ),
-                const SizedBox(height: 25),
-                AuthField(
-                  controller: passwordController,
-                  hintText: "Password",
-                ),
-                const SizedBox(height: 25),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: RoundedSmallButton(
-                    onTap: onLogin,
-                    label: "Login",
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-                RichText(
-                  text: TextSpan(
-                    text: "Don't have an account? ",
-                    style: const TextStyle(
-                      color: Pallete.whiteColor,
-                      fontSize: 16,
-                    ),
+      body: isLoading
+          ? const Loader()
+          : Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
                     children: [
-                      TextSpan(
-                        text: " Sign Up",
-                        style: const TextStyle(
-                          color: Pallete.blueColor,
-                          fontSize: 16,
+                      // textspan
+
+                      AuthField(
+                        controller: emailConroller,
+                        hintText: "Email",
+                      ),
+                      const SizedBox(height: 25),
+                      AuthField(
+                        controller: passwordController,
+                        hintText: "Password",
+                      ),
+                      const SizedBox(height: 25),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: RoundedSmallButton(
+                          onTap: onLogin,
+                          label: "Login",
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            // navigate to sign up page
-                            Navigator.push(
-                              context,
-                              SignUpView.route(),
-                            );
-                          },
-                      )
+                      ),
+
+                      const SizedBox(height: 40),
+                      RichText(
+                        text: TextSpan(
+                          text: "Don't have an account? ",
+                          style: const TextStyle(
+                            color: Pallete.whiteColor,
+                            fontSize: 16,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: " Sign Up",
+                              style: const TextStyle(
+                                color: Pallete.blueColor,
+                                fontSize: 16,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  // navigate to sign up page
+                                  Navigator.push(
+                                    context,
+                                    SignUpView.route(),
+                                  );
+                                },
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
