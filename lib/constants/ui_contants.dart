@@ -7,15 +7,19 @@ import 'package:tweetify/theme/pallete.dart';
 class UIConstants {
   static AppBar appBar() {
     return AppBar(
-    
       title: SvgPicture.asset(
         AssetsConstants.xlogo,
         color: Pallete.blueColor,
         height: 30,
-        
       ),
       centerTitle: true,
-      
     );
   }
+
+  static List<Widget> bottomTabBarPages = [
+    Text("Feed Screen"),
+    Text("Search Screen"),
+    Text("notification Screen"),
+    Text("Messages Screen"),
+  ];
 }
