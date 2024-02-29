@@ -1,4 +1,5 @@
 import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:tweetify/constants/constants.dart';
 import 'package:tweetify/core/core.dart';
@@ -11,9 +12,9 @@ final userAPIProvider = Provider((ref) {
   return UserAPI(db: db);
 });
 
-
 abstract class IUserAPI {
   FutureEitherVoid saveUserData(UserModel userModel);
+  Future<Document> getUserData(String uid);
 }
 
 class UserAPI implements IUserAPI {
@@ -25,7 +26,7 @@ class UserAPI implements IUserAPI {
       await _db.createDocument(
         databaseId: AppWriteConstant.databaseId,
         collectionId: AppWriteConstant.userCollectionId,
-        documentId: ID.unique(),
+        documentId: userModel.uid,
         data: userModel.toMap(),
       );
       return right(null);
@@ -34,5 +35,14 @@ class UserAPI implements IUserAPI {
     } catch (e, st) {
       return left(Failure(e.toString(), st));
     }
+  }
+
+  @override
+  Future<Document> getUserData(String uid) {
+    return _db.getDocument(
+      databaseId: AppWriteConstant.databaseId,
+      collectionId: AppWriteConstant.userCollectionId,
+      documentId: uid,
+    );
   }
 }

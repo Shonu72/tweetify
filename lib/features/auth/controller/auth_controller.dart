@@ -15,6 +15,18 @@ final authControllerProvider =
   return AuthController(authAPI: authAPI, userAPI: userAPI);
 });
 
+final currentUserDeailsProvider = FutureProvider((ref) async {
+  // getting curent user id from currentUserAccountProvider
+  final currentUserId = ref.watch(currentUserAccountProvider).value!.$id;
+  final userDetails = ref.watch(userDetailsProvider(currentUserId));
+  return userDetails.value;
+});
+
+final userDetailsProvider = FutureProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid);
+});
+
 final currentUserAccountProvider = FutureProvider((ref) async {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.currentUser();
@@ -51,7 +63,7 @@ class AuthController extends StateNotifier<bool> {
         following: const [],
         profilePic: '',
         bannerPic: '',
-        uid: '',
+        uid: r.$id,
         bio: '',
         isTwitterBlue: false,
       );
@@ -61,7 +73,6 @@ class AuthController extends StateNotifier<bool> {
         showSnackBar(context, "Account created! Please login.");
         Navigator.push(context, LoginView.route());
       });
-      
     });
   }
 
@@ -80,5 +91,11 @@ class AuthController extends StateNotifier<bool> {
       (l) => showSnackBar(context, l.message),
       (r) => Navigator.push(context, HomeView.route()),
     );
+  }
+
+  Future<UserModel> getUserData(String uid) async {
+    final document = await _userAPI.getUserData(uid);
+    final updatedUser = UserModel.fromMap(document.data);
+    return updatedUser;
   }
 }
