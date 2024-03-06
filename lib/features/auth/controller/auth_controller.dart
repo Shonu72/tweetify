@@ -18,8 +18,10 @@ final authControllerProvider =
 final currentUserDeailsProvider = FutureProvider((ref) async {
   // getting curent user id from currentUserAccountProvider
   final currentUserId = ref.watch(currentUserAccountProvider).value!.$id;
+  print(currentUserId);
   final userDetails = ref.watch(userDetailsProvider(currentUserId));
   return userDetails.value;
+  
 });
 
 final userDetailsProvider = FutureProvider.family((ref, String uid) {

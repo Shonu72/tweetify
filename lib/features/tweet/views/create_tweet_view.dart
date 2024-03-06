@@ -1,18 +1,20 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:tweetify/common/common.dart';
 import 'package:tweetify/constants/assets_constant.dart';
 import 'package:tweetify/core/utils.dart';
 import 'package:tweetify/features/auth/controller/auth_controller.dart';
 import 'package:tweetify/theme/pallete.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class CreateTweetScreen extends ConsumerStatefulWidget {
   static route() =>
-      MaterialPageRoute(builder: (context) => CreateTweetScreen());
+      MaterialPageRoute(builder: (context) => const CreateTweetScreen());
+
   const CreateTweetScreen({super.key});
 
   @override
@@ -39,6 +41,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserDeailsProvider).value;
+    print(currentUser);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -51,11 +54,17 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
           },
         ),
         actions: [
-          RoundedSmallButton(
-            onTap: () {},
-            label: "Tweet",
-            backgroundColor: Pallete.blueColor,
-            textColor: Pallete.whiteColor,
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 10,
+              top: 8,
+            ),
+            child: RoundedSmallButton(
+              onTap: () {},
+              label: "Tweet",
+              backgroundColor: Pallete.blueColor,
+              textColor: Pallete.whiteColor,
+            ),
           )
         ],
       ),
@@ -95,7 +104,8 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
                       ],
                     ),
                     if (images.isNotEmpty)
-                      CarouselSlider(items: images.map(
+                      CarouselSlider(
+                        items: images.map(
                           (file) {
                             return Container(
                               width: MediaQuery.of(context).size.width,
@@ -106,7 +116,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
                             );
                           },
                         ).toList(),
-                       options: CarouselOptions(
+                        options: CarouselOptions(
                           height: 400,
                           enableInfiniteScroll: false,
                         ),
