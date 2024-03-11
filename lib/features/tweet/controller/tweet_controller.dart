@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tweetify/apis/storage_api.dart';
 import 'package:tweetify/apis/tweet_api.dart';
 import 'package:tweetify/core/enums/tweet_type_enum.dart';
 import 'package:tweetify/core/utils.dart';
@@ -13,16 +14,22 @@ final tweetControllerProvider =
   return TweetController(
     ref: ref,
     tweetAPI: ref.watch(tweetAPIProvider),
+    storageAPI: ref.watch(storageAPIProvider),
   );
 });
 
 class TweetController extends StateNotifier<bool> {
   final TweetAPI _tweetAPI;
   final Ref _ref;
+  final StorageAPI _storageAPI;
 
-  TweetController({required Ref ref, required TweetAPI tweetAPI})
+  TweetController(
+      {required Ref ref,
+      required TweetAPI tweetAPI,
+      required StorageAPI storageAPI})
       : _ref = ref,
         _tweetAPI = tweetAPI,
+        _storageAPI = storageAPI,
         super(false);
 
   void shareTweet({
@@ -55,21 +62,22 @@ class TweetController extends StateNotifier<bool> {
     required List<File> images,
     required String text,
     required BuildContext context,
-  }) async{
+  }) async {
     state = true;
     final hashtags = _getHashTagFromText(text);
     String link = _getLinkFromText(text);
     final user = _ref.read(currentUserDeailsProvider).value!;
+    final imageLinks = await _storageAPI.uploadImage(images);
     Tweet tweet = Tweet(
       text: text,
       hashtags: hashtags,
       link: link,
-      imageLinks: [],
+      imageLinks: imageLinks,
       uid: user.uid,
       tweetType: TweetType.image,
       tweetedAt: DateTime.now(),
-      likes: [],
-      commentIds: [],
+      likes: const [],
+      commentIds: const [],
       id: '',
       reshareCount: 0,
     );
@@ -91,12 +99,12 @@ class TweetController extends StateNotifier<bool> {
       text: text,
       hashtags: hashtags,
       link: link,
-      imageLinks: [],
+      imageLinks: const [],
       uid: user.uid,
       tweetType: TweetType.text,
       tweetedAt: DateTime.now(),
-      likes: [],
-      commentIds: [],
+      likes: const [],
+      commentIds: const [],
       id: '',
       reshareCount: 0,
     );

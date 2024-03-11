@@ -34,7 +34,10 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
 
   void shareTweet() {
     ref.read(tweetControllerProvider.notifier).shareTweet(
-        images: images, text: tweetTextController.text, context: context);
+          images: images,
+          text: tweetTextController.text,
+          context: context,
+        );
   }
 
   void onPickImages() async {
@@ -49,6 +52,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
     final currentUser = ref.watch(currentUserDeailsProvider).value;
     print(currentUser);
     final isLoading = ref.watch(tweetControllerProvider);
+    print(isLoading.toString());
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -75,7 +79,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
           )
         ],
       ),
-      body:isLoading|| currentUser == null
+      body: isLoading || currentUser == null
           ? const Loader()
           : SafeArea(
               child: SingleChildScrollView(
