@@ -4,4 +4,5 @@ class AppWriteConstant {
   static const String endPoint = "http://192.168.30.117:8080/v1";
   // static const String endPoint = "http://localhost:8080/v1";
   static const String userCollectionId = "65dc3e18817b97f94999";
+  static const String tweetCollectionId = "65ef2f71c4c55d1d8a71";
 }

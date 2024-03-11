@@ -9,6 +9,7 @@ import 'package:tweetify/common/common.dart';
 import 'package:tweetify/constants/assets_constant.dart';
 import 'package:tweetify/core/utils.dart';
 import 'package:tweetify/features/auth/controller/auth_controller.dart';
+import 'package:tweetify/features/tweet/controller/tweet_controller.dart';
 import 'package:tweetify/theme/pallete.dart';
 
 class CreateTweetScreen extends ConsumerStatefulWidget {
@@ -31,6 +32,11 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
     super.dispose();
   }
 
+  void shareTweet() {
+    ref.read(tweetControllerProvider.notifier).shareTweet(
+        images: images, text: tweetTextController.text, context: context);
+  }
+
   void onPickImages() async {
     images = await pickImages();
     setState(
@@ -42,6 +48,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserDeailsProvider).value;
     print(currentUser);
+    final isLoading = ref.watch(tweetControllerProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -60,7 +67,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
               top: 8,
             ),
             child: RoundedSmallButton(
-              onTap: () {},
+              onTap: shareTweet,
               label: "Tweet",
               backgroundColor: Pallete.blueColor,
               textColor: Pallete.whiteColor,
@@ -68,7 +75,7 @@ class _CreateTweetScreenState extends ConsumerState<CreateTweetScreen> {
           )
         ],
       ),
-      body: currentUser == null
+      body:isLoading|| currentUser == null
           ? const Loader()
           : SafeArea(
               child: SingleChildScrollView(
