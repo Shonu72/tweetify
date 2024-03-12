@@ -89,7 +89,7 @@ class Tweet {
       text: map['text'] ?? '',
       hashtags: List<String>.from(map['hashtags'] ?? []),
       link: map['link'] ?? '',
-      imageLinks: List<String>.from(map['imageLinks']),
+      imageLinks: List<String>.from(map['imageLinks'] ?? []),
       uid: map['uid'] ?? '',
       tweetType: (map['tweetType'] as String).toTweetTypeEnum(),
       tweetedAt: DateTime.fromMillisecondsSinceEpoch(map['tweetedAt'] ?? []),

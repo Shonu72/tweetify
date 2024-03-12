@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tweetify/constants/constants.dart';
 import 'package:tweetify/features/tweet/views/create_tweet_view.dart';
+import 'package:tweetify/features/tweet/widgets/tweet_list.dart';
 import 'package:tweetify/theme/pallete.dart';
 
 class HomeView extends StatefulWidget {
@@ -38,7 +39,8 @@ class _HomeViewState extends State<HomeView> {
           // NotificationScreen(),
           // MessagesScreen(),
 
-          Text("Feed Screen"),
+          // Text("Feed Screen"),
+          TweetList(),
           Text("Search Screen"),
           Text("notification Screen"),
           Text("Messages Screen"),

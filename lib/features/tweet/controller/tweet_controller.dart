@@ -18,6 +18,11 @@ final tweetControllerProvider =
   );
 });
 
+final getTweetsProvider = FutureProvider((ref) {
+  final tweetController = ref.watch(tweetControllerProvider.notifier);
+  return tweetController.getTweets();
+});
+
 class TweetController extends StateNotifier<bool> {
   final TweetAPI _tweetAPI;
   final Ref _ref;
@@ -32,6 +37,11 @@ class TweetController extends StateNotifier<bool> {
         _storageAPI = storageAPI,
         super(false);
 
+  Future<List<Tweet>> getTweets() async {
+    final tweetList = await _tweetAPI.getTweets();
+    return tweetList.map((tweet) => Tweet.fromMap(tweet.data)).toList();
+  }
+
   void shareTweet({
     required List<File> images,
     required String text,
@@ -41,14 +51,15 @@ class TweetController extends StateNotifier<bool> {
       showSnackBar(context, "Please enter text");
     }
 
-    if (text.isNotEmpty) {
+    if (images.isNotEmpty) {
       // for image tweet
       _shareImageTweet(
         images: images,
         text: text,
         context: context,
       );
-    } else {
+    } 
+    else {
       // for only text tweet
       _shareTextTweet(
         text: text,
