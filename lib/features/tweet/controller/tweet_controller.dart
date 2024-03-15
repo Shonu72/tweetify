@@ -8,6 +8,7 @@ import 'package:tweetify/core/enums/tweet_type_enum.dart';
 import 'package:tweetify/core/utils.dart';
 import 'package:tweetify/features/auth/controller/auth_controller.dart';
 import 'package:tweetify/models/tweet_model.dart';
+import 'package:tweetify/models/user_models.dart';
 
 final tweetControllerProvider =
     StateNotifierProvider<TweetController, bool>((ref) {
@@ -21,6 +22,12 @@ final tweetControllerProvider =
 final getTweetsProvider = FutureProvider((ref) {
   final tweetController = ref.watch(tweetControllerProvider.notifier);
   return tweetController.getTweets();
+});
+
+// autodispose dispose the provider automatically , good practice to put in evry provider
+final getLatestTweetProvider = StreamProvider.autoDispose((ref) {
+  final tweetAPI = ref.watch(tweetAPIProvider);
+  return tweetAPI.getLatestTweets();
 });
 
 class TweetController extends StateNotifier<bool> {
@@ -42,6 +49,19 @@ class TweetController extends StateNotifier<bool> {
     return tweetList.map((tweet) => Tweet.fromMap(tweet.data)).toList();
   }
 
+  void likeTweet(Tweet tweet, UserModel user) async {
+    List<String> likes = tweet.likes;
+    if (tweet.likes.contains(user.uid)) {
+      likes.remove(user.uid);
+    } else {
+      likes.add(user.uid);
+    }
+
+    tweet = tweet.copyWith(likes: likes);
+    final res = await _tweetAPI.likeTweet(tweet);
+    res.fold((l) => null, (r) => null);
+  }
+
   void shareTweet({
     required List<File> images,
     required String text,
@@ -49,17 +69,14 @@ class TweetController extends StateNotifier<bool> {
   }) {
     if (text.isEmpty) {
       showSnackBar(context, "Please enter text");
-    }
-
-    if (images.isNotEmpty) {
+    } else if (images.isNotEmpty) {
       // for image tweet
       _shareImageTweet(
         images: images,
         text: text,
         context: context,
       );
-    } 
-    else {
+    } else {
       // for only text tweet
       _shareTextTweet(
         text: text,
