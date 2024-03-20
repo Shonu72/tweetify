@@ -15,7 +15,8 @@ class TweetList extends ConsumerWidget {
     return ref.watch(getTweetsProvider).when(
           data: (tweets) {
             return ref.watch(getLatestTweetProvider).when(
-                  data: (data) {
+                  data: (data) 
+                  {
                     if (data.events.contains(
                         // this will listen to any changes in the collection and * is used for all the documents but its not a good practice
                         // need to make new database for production
@@ -73,5 +74,6 @@ class TweetList extends ConsumerWidget {
           error: (error, stacktrace) => ErrorPage(errorText: error.toString()),
           loading: () => const Loader(),
         );
+  
   }
 }
