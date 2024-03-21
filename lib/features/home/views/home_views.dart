@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tweetify/constants/constants.dart';
+import 'package:tweetify/features/explore/views/explore_view.dart';
 import 'package:tweetify/features/tweet/views/create_tweet_view.dart';
 import 'package:tweetify/features/tweet/widgets/tweet_list.dart';
 import 'package:tweetify/theme/pallete.dart';
@@ -30,7 +31,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar,
+      appBar: _page == 0 ? appbar : null,
       body: IndexedStack(
         index: _page,
         children: const [
@@ -41,7 +42,7 @@ class _HomeViewState extends State<HomeView> {
 
           // Text("Feed Screen"),
           TweetList(),
-          Text("Search Screen"),
+          ExploreViews(),
           Text("notification Screen"),
           Text("Messages Screen"),
         ],
