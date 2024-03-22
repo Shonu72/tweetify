@@ -5,6 +5,7 @@ import 'package:tweetify/common/error_page.dart';
 import 'package:tweetify/constants/constants.dart';
 import 'package:tweetify/features/auth/controller/auth_controller.dart';
 import 'package:tweetify/features/profile/controller/user_profile_controller.dart';
+import 'package:tweetify/features/profile/views/user_edit_view.dart';
 import 'package:tweetify/features/profile/widgets/follow_count.dart';
 import 'package:tweetify/features/tweet/controller/tweet_controller.dart';
 import 'package:tweetify/features/tweet/widgets/tweet_card.dart';
@@ -36,7 +37,7 @@ class UserProfile extends ConsumerWidget {
                             ? Container(
                                 color: Pallete.blueColor,
                               )
-                            : Image.network(user.bannerPic),
+                            : Image.network(user.bannerPic, fit: BoxFit.fitWidth),
                       ),
                       Positioned(
                         bottom: 2,
@@ -50,7 +51,12 @@ class UserProfile extends ConsumerWidget {
                         margin: const EdgeInsets.all(20),
                         alignment: Alignment.bottomRight,
                         child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (currentUser.uid == user.uid) {
+                                Navigator.push(
+                                    context, EditProfileView.route());
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
