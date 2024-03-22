@@ -37,7 +37,8 @@ class UserProfile extends ConsumerWidget {
                             ? Container(
                                 color: Pallete.blueColor,
                               )
-                            : Image.network(user.bannerPic, fit: BoxFit.fitWidth),
+                            : Image.network(user.bannerPic,
+                                fit: BoxFit.fitWidth),
                       ),
                       Positioned(
                         bottom: 2,
@@ -53,8 +54,17 @@ class UserProfile extends ConsumerWidget {
                         child: OutlinedButton(
                             onPressed: () {
                               if (currentUser.uid == user.uid) {
+                                // edit profile page
                                 Navigator.push(
                                     context, EditProfileView.route());
+                              } else {
+                                ref
+                                    .read(
+                                        userProfileControllerProvider.notifier)
+                                    .followUser(
+                                        user: user,
+                                        context: context,
+                                        currentUser: currentUser);
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -68,7 +78,9 @@ class UserProfile extends ConsumerWidget {
                             child: Text(
                               currentUser.uid == user.uid
                                   ? 'Edit Profile'
-                                  : "Follow",
+                                  : currentUser.following.contains(user.uid)
+                                      ? "Unfollow"
+                                      : "Follow",
                               style: const TextStyle(
                                 color: Pallete.whiteColor,
                               ),

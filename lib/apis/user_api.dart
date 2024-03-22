@@ -19,6 +19,8 @@ abstract class IUserAPI {
   Future<List<Document>> searchUserByName(String name);
   FutureEitherVoid updateUserData(UserModel userModel);
   Stream<RealtimeMessage> getLatestProfileData();
+  FutureEitherVoid followUser(UserModel user);
+  FutureEitherVoid addToFollowing(UserModel user);
 }
 
 class UserAPI implements IUserAPI {
@@ -90,5 +92,43 @@ class UserAPI implements IUserAPI {
     return _realtime.subscribe([
       'databases.${AppWriteConstant.databaseId}.collections.${AppWriteConstant.userCollectionId}.documents',
     ]).stream;
+  }
+
+  @override
+  FutureEitherVoid followUser(UserModel user) async {
+    try {
+      await _db.updateDocument(
+        databaseId: AppWriteConstant.databaseId,
+        collectionId: AppWriteConstant.userCollectionId,
+        documentId: user.uid,
+        data: {
+          'followers': user.followers,
+        },
+      );
+      return right(null);
+    } on AppwriteException catch (e, st) {
+      return left(Failure(e.message ?? 'Something went wrong', st));
+    } catch (e, st) {
+      return left(Failure(e.toString(), st));
+    }
+  }
+
+  @override
+  FutureEitherVoid addToFollowing(UserModel user) async {
+    try {
+      await _db.updateDocument(
+        databaseId: AppWriteConstant.databaseId,
+        collectionId: AppWriteConstant.userCollectionId,
+        documentId: user.uid,
+        data: {
+          'following': user.following,
+        },
+      );
+      return right(null);
+    } on AppwriteException catch (e, st) {
+      return left(Failure(e.message ?? 'Something went wrong', st));
+    } catch (e, st) {
+      return left(Failure(e.toString(), st));
+    }
   }
 }
