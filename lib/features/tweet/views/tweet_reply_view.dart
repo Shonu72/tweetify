@@ -13,7 +13,7 @@ import 'package:tweetify/models/tweet_model.dart';
 class TweetReplyScreen extends ConsumerWidget {
   static route(Tweet tweet) =>
       MaterialPageRoute(builder: (context) => TweetReplyScreen(tweet: tweet));
-  final Tweet tweet;
+  final Tweet tweet;  
   const TweetReplyScreen({
     super.key,
     required this.tweet,

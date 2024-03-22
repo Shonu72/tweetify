@@ -15,8 +15,7 @@ class TweetList extends ConsumerWidget {
     return ref.watch(getTweetsProvider).when(
           data: (tweets) {
             return ref.watch(getLatestTweetProvider).when(
-                  data: (data) 
-                  {
+                  data: (data) {
                     if (data.events.contains(
                         // this will listen to any changes in the collection and * is used for all the documents but its not a good practice
                         // need to make new database for production
@@ -26,7 +25,7 @@ class TweetList extends ConsumerWidget {
                     } else if (data.events.contains(
                         'databases.*.collections.${AppWriteConstant.tweetCollectionId}.documents.*.update')) {
                       // get id of tweet
-                       final startingPoint =
+                      final startingPoint =
                           data.events[0].lastIndexOf('documents.');
                       final endPoint = data.events[0].lastIndexOf('.update');
                       final tweetId = data.events[0]
@@ -63,6 +62,7 @@ class TweetList extends ConsumerWidget {
                     );
                   },
                 );
+
             // return ListView.builder(
             //   itemCount: tweets.length,
             //   itemBuilder: (context, index) {
@@ -74,6 +74,5 @@ class TweetList extends ConsumerWidget {
           error: (error, stacktrace) => ErrorPage(errorText: error.toString()),
           loading: () => const Loader(),
         );
-  
   }
 }

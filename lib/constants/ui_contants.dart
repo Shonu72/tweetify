@@ -12,6 +12,12 @@ class UIConstants {
         color: Pallete.blueColor,
         height: 30,
       ),
+      // leading: IconButton(
+      //     onPressed: () {},
+      //     icon: Icon(
+      //       Icons.person_4_outlined,
+      //       size: 30,
+      //     )),
       centerTitle: true,
     );
   }
