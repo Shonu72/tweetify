@@ -5,6 +5,7 @@ import 'package:tweetify/common/error_page.dart';
 import 'package:tweetify/constants/constants.dart';
 import 'package:tweetify/core/enums/tweet_type_enum.dart';
 import 'package:tweetify/features/auth/controller/auth_controller.dart';
+import 'package:tweetify/features/profile/views/user_profile_view.dart';
 import 'package:tweetify/features/tweet/controller/tweet_controller.dart';
 import 'package:tweetify/features/tweet/views/tweet_reply_view.dart';
 import 'package:tweetify/features/tweet/widgets/carousel_image.dart';
@@ -39,10 +40,15 @@ class TweetCard extends ConsumerWidget {
                         children: [
                           Container(
                             margin: const EdgeInsets.all(10),
-                            child: CircleAvatar(
-                              // will show different profile pic for different users
-                              backgroundImage: NetworkImage(user.profilePic),
-                              radius: 30,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, UserProfileView.route(user));
+                              },
+                              child: CircleAvatar(
+                                // will show different profile pic for different users
+                                backgroundImage: NetworkImage(user.profilePic),
+                                radius: 30,
+                              ),
                             ),
                           ),
                           Expanded(

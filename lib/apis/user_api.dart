@@ -9,7 +9,8 @@ import 'package:fpdart/fpdart.dart';
 
 final userAPIProvider = Provider((ref) {
   final db = ref.watch(appWriteDatabaseProvider);
-  return UserAPI(db: db);
+  final realtime = ref.watch(appWriteRealtimeProvider);
+  return UserAPI(db: db, realmtime: realtime);
 });
 
 abstract class IUserAPI {
@@ -17,11 +18,18 @@ abstract class IUserAPI {
   Future<Document> getUserData(String uid);
   Future<List<Document>> searchUserByName(String name);
   FutureEitherVoid updateUserData(UserModel userModel);
+  Stream<RealtimeMessage> getLatestProfileData();
 }
 
 class UserAPI implements IUserAPI {
   final Databases _db;
-  UserAPI({required Databases db}) : _db = db;
+  final Realtime _realtime;
+
+  UserAPI({
+    required Databases db,
+    required Realtime realmtime,
+  })  : _db = db,
+        _realtime = realmtime;
   @override
   FutureEitherVoid saveUserData(UserModel userModel) async {
     try {
@@ -59,10 +67,10 @@ class UserAPI implements IUserAPI {
     );
     return documents.documents;
   }
-  
+
   @override
-  FutureEitherVoid updateUserData(UserModel userModel) async{
-  try {
+  FutureEitherVoid updateUserData(UserModel userModel) async {
+    try {
       await _db.updateDocument(
         databaseId: AppWriteConstant.databaseId,
         collectionId: AppWriteConstant.userCollectionId,
@@ -76,5 +84,11 @@ class UserAPI implements IUserAPI {
       return left(Failure(e.toString(), st));
     }
   }
-  }
 
+  @override
+  Stream<RealtimeMessage> getLatestProfileData() {
+    return _realtime.subscribe([
+      'databases.${AppWriteConstant.databaseId}.collections.${AppWriteConstant.userCollectionId}.documents',
+    ]).stream;
+  }
+}

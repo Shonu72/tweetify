@@ -9,7 +9,8 @@ import 'package:tweetify/core/utils.dart';
 import 'package:tweetify/models/tweet_model.dart';
 import 'package:tweetify/models/user_models.dart';
 
-final userProfileControllerProvider = StateNotifierProvider<UserProfileController, bool>((ref) {
+final userProfileControllerProvider =
+    StateNotifierProvider<UserProfileController, bool>((ref) {
   return UserProfileController(
     tweetAPI: ref.watch(tweetAPIProvider),
     storageAPI: ref.watch(storageAPIProvider),
@@ -21,6 +22,11 @@ final getUserTweetsProvider = FutureProvider.family((ref, String uid) async {
   final userProfileController =
       ref.watch(userProfileControllerProvider.notifier);
   return userProfileController.getUserTweets(uid);
+});
+
+final getLatestUserProfileDataProvider = StreamProvider((ref){
+  final userApi = ref.watch(userAPIProvider);
+  return userApi.getLatestProfileData();
 });
 
 class UserProfileController extends StateNotifier<bool> {
