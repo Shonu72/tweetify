@@ -28,9 +28,15 @@ final getTweetsProvider = FutureProvider((ref) {
   final tweetController = ref.watch(tweetControllerProvider.notifier);
   return tweetController.getTweets();
 });
+
 final getRepliesToTweetProvider = FutureProvider.family((ref, Tweet tweet) {
   final tweetController = ref.watch(tweetControllerProvider.notifier);
   return tweetController.getRepliesToTweet(tweet);
+});
+
+final getTweetsByHashtagProvider = FutureProvider.family((ref, String hashtag) {
+  final tweetController = ref.watch(tweetControllerProvider.notifier);
+  return tweetController.getTweetsByHashtag(hashtag);
 });
 
 // autodispose dispose the provider automatically , good practice to put in evry provider
@@ -93,6 +99,11 @@ class TweetController extends StateNotifier<bool> {
 
   Future<List<Tweet>> getRepliesToTweet(Tweet tweet) async {
     final documents = await _tweetAPI.getRepliesToTweet(tweet);
+    return documents.map((tweet) => Tweet.fromMap(tweet.data)).toList();
+  }
+
+  Future<List<Tweet>> getTweetsByHashtag(String hashtag) async {
+    final documents = await _tweetAPI.getTweetsByHashtag(hashtag);
     return documents.map((tweet) => Tweet.fromMap(tweet.data)).toList();
   }
 

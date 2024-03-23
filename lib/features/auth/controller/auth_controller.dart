@@ -5,6 +5,7 @@ import 'package:tweetify/apis/auth_api.dart';
 import 'package:tweetify/apis/user_api.dart';
 import 'package:tweetify/core/utils.dart';
 import 'package:tweetify/features/auth/view/login_view.dart';
+import 'package:tweetify/features/auth/view/signup_view.dart';
 import 'package:tweetify/features/home/views/home_views.dart';
 import 'package:tweetify/models/user_models.dart';
 
@@ -21,7 +22,6 @@ final currentUserDeailsProvider = FutureProvider((ref) async {
   print(currentUserId);
   final userDetails = ref.watch(userDetailsProvider(currentUserId));
   return userDetails.value;
-  
 });
 
 final userDetailsProvider = FutureProvider.family((ref, String uid) {
@@ -99,5 +99,16 @@ class AuthController extends StateNotifier<bool> {
     final document = await _userAPI.getUserData(uid);
     final updatedUser = UserModel.fromMap(document.data);
     return updatedUser;
+  }
+
+  void logout(BuildContext context) async {
+    final res = await _authAPI.logOut();
+    res.fold((l) => null, (r) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        SignUpView.route(),
+        (route) => false,
+      );
+    });
   }
 }

@@ -42,7 +42,8 @@ class TweetCard extends ConsumerWidget {
                             margin: const EdgeInsets.all(10),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(context, UserProfileView.route(user));
+                                Navigator.push(
+                                    context, UserProfileView.route(user));
                               },
                               child: CircleAvatar(
                                 // will show different profile pic for different users
@@ -77,7 +78,8 @@ class TweetCard extends ConsumerWidget {
                                 Row(
                                   children: [
                                     Container(
-                                      margin: const EdgeInsets.only(right: 5),
+                                      margin: EdgeInsets.only(
+                                          right: user.isTwitterBlue ? 1 : 5),
                                       child: Text(
                                         user.name,
                                         style: const TextStyle(
@@ -86,6 +88,16 @@ class TweetCard extends ConsumerWidget {
                                         ),
                                       ),
                                     ),
+                                    if (user.isTwitterBlue)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 5),
+                                        child: SvgPicture.asset(
+                                          AssetsConstants.verifiedIcon,
+                                          height: 20,
+                                          color: Pallete.blueColor,
+                                        ),
+                                      ),
                                     Text(
                                       '@${user.name} . ${timeago.format(tweet.tweetedAt, locale: 'en_short')}',
                                       style: const TextStyle(

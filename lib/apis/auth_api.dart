@@ -27,6 +27,7 @@ abstract class IAuthAPI {
     required String password,
   });
   Future<User?> currentUser();
+  FutureEitherVoid logOut();
 }
 
 class AuthAPI implements IAuthAPI {
@@ -75,6 +76,21 @@ class AuthAPI implements IAuthAPI {
         password: password,
       );
       return right(session);
+    } on AppwriteException catch (e, stackTrace) {
+      return left(
+          Failure(e.message ?? 'Some unexpected error occured', stackTrace));
+    } catch (e, stackTrace) {
+      return left(Failure(e.toString(), stackTrace));
+    }
+  }
+  
+  @override
+  FutureEitherVoid logOut() async{
+     try {
+      final session = await _account.deleteSession(
+        sessionId: 'current',
+      );
+      return right(null);
     } on AppwriteException catch (e, stackTrace) {
       return left(
           Failure(e.message ?? 'Some unexpected error occured', stackTrace));

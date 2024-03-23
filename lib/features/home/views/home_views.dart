@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tweetify/constants/constants.dart';
 import 'package:tweetify/features/explore/views/explore_view.dart';
+import 'package:tweetify/features/home/widgets/side_drawer.dart';
 import 'package:tweetify/features/notification/views/notification_views.dart';
 import 'package:tweetify/features/tweet/views/create_tweet_view.dart';
 import 'package:tweetify/features/tweet/widgets/tweet_list.dart';
@@ -62,6 +63,7 @@ class _HomeViewState extends State<HomeView> {
           size: 28,
         ),
       ),
+      drawer: const SideDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _page,
         onTap: onPageChange,

@@ -12,6 +12,8 @@ import 'package:tweetify/features/tweet/widgets/tweet_card.dart';
 import 'package:tweetify/models/tweet_model.dart';
 import 'package:tweetify/models/user_models.dart';
 import 'package:tweetify/theme/pallete.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 class UserProfile extends ConsumerWidget {
   final UserModel user;
@@ -93,12 +95,25 @@ class UserProfile extends ConsumerWidget {
                   padding: const EdgeInsets.all(8),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
-                      Text(
-                        user.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            user.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                          if (user.isTwitterBlue)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: SvgPicture.asset(
+                                AssetsConstants.verifiedIcon,
+                                height: 20,
+                                color: Pallete.blueColor,
+                              ),
+                            ),
+                        ],
                       ),
                       Text(
                         '@${user.name}',
