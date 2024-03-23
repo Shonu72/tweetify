@@ -10,6 +10,16 @@ final notoficationControllerProvider =
   );
 });
 
+final getLatestNotificationProvider = StreamProvider((ref) {
+  final notificationAPI = ref.watch(notificatioApiProvider);
+  return notificationAPI.getLatestNotifications();
+});
+
+final getNotificationsProvider = FutureProvider.family((ref, String uid) async {
+  final notificationController = ref.watch(notoficationControllerProvider.notifier);
+  return notificationController.getNotifications(uid);
+});
+
 class NotoficationController extends StateNotifier<bool> {
   final NotificationAPI _notificationAPI;
   NotoficationController({
@@ -32,5 +42,10 @@ class NotoficationController extends StateNotifier<bool> {
     );
     final res = await _notificationAPI.createNotification(notification);
     res.fold((l) => print(l.message), (r) => null);
+  }
+
+  Future<List<Notification>> getNotifications(String uid) async {
+    final notifications = await _notificationAPI.getNotifications(uid);
+    return notifications.map((e) => Notification.fromMap(e.data)).toList();
   }
 }

@@ -31,7 +31,7 @@ class TweetCard extends ConsumerWidget {
               data: (user) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(context, TweetReplyScreen.route(tweet));
+                    Navigator.push(context, TwitterReplyScreen.route(tweet));
                   },
                   child: Column(
                     children: [

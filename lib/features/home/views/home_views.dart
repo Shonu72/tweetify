@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tweetify/constants/constants.dart';
 import 'package:tweetify/features/explore/views/explore_view.dart';
+import 'package:tweetify/features/notification/views/notification_views.dart';
 import 'package:tweetify/features/tweet/views/create_tweet_view.dart';
 import 'package:tweetify/features/tweet/widgets/tweet_list.dart';
 import 'package:tweetify/theme/pallete.dart';
@@ -43,7 +44,7 @@ class _HomeViewState extends State<HomeView> {
           // Text("Feed Screen"),
           TweetList(),
           ExploreViews(),
-          Text("notification Screen"),
+          NotificationView(),
           Text("Messages Screen"),
         ],
       ),

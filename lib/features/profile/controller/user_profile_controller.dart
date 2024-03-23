@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tweetify/apis/storage_api.dart';
 import 'package:tweetify/apis/tweet_api.dart';
 import 'package:tweetify/apis/user_api.dart';
+import 'package:tweetify/core/enums/notification_type_enum.dart';
 import 'package:tweetify/core/utils.dart';
+import 'package:tweetify/features/notification/controller/notification_controller.dart';
 import 'package:tweetify/models/tweet_model.dart';
 import 'package:tweetify/models/user_models.dart';
 
@@ -15,6 +17,7 @@ final userProfileControllerProvider =
     tweetAPI: ref.watch(tweetAPIProvider),
     storageAPI: ref.watch(storageAPIProvider),
     userApi: ref.watch(userAPIProvider),
+    notoficationController: ref.watch(notoficationControllerProvider.notifier),
   );
 });
 
@@ -33,13 +36,17 @@ class UserProfileController extends StateNotifier<bool> {
   final TweetAPI _tweetAPI;
   final StorageAPI _storageAPI;
   final UserAPI _userApi;
+  final NotoficationController _notificationController;
+
   UserProfileController({
     required TweetAPI tweetAPI,
     required StorageAPI storageAPI,
     required UserAPI userApi,
+    required NotoficationController notoficationController,
   })  : _tweetAPI = tweetAPI,
         _storageAPI = storageAPI,
         _userApi = userApi,
+        _notificationController = notoficationController,
         super(false);
 
   Future<List<Tweet>> getUserTweets(String uid) async {
@@ -91,7 +98,14 @@ class UserProfileController extends StateNotifier<bool> {
     final res = await _userApi.followUser(user);
     res.fold((l) => showSnackBar(context, l.message), (r) async {
       final res2 = await _userApi.addToFollowing(currentUser);
-      res2.fold((l) => showSnackBar(context, l.message), (r) => null);
+      res2.fold((l) => showSnackBar(context, l.message), (r) {
+        _notificationController.createNotificatio(
+          text: '${currentUser.name} follwed you',
+          postId: '',
+          uid: user.uid,
+          notificationType: NotificationType.follow,
+        );
+      });
     });
   }
 }

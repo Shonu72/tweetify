@@ -109,8 +109,16 @@ class TweetController extends StateNotifier<bool> {
       tweet = tweet.copyWith(
           id: ID.unique(), reshareCount: 0, tweetedAt: DateTime.now());
       final res2 = await _tweetAPI.shareTweet(tweet);
-      res2.fold((l) => showSnackBar(context, l.message),
-          (r) => showSnackBar(context, "Retweeted"));
+      res2.fold((l) => showSnackBar(context, l.message), (r) {
+        _notificationController.createNotificatio(
+          text: '${currentUser.name} retweeted your tweet',
+          postId: tweet.id,
+          uid: tweet.uid,
+          notificationType: NotificationType.retweet,
+        );
+
+        showSnackBar(context, "Retweeted");
+      });
     });
   }
 
@@ -119,6 +127,7 @@ class TweetController extends StateNotifier<bool> {
     required String text,
     required BuildContext context,
     required String repliedTo,
+    required String repliedToUserId,
   }) {
     if (text.isEmpty) {
       showSnackBar(context, "Please enter text");
@@ -129,12 +138,15 @@ class TweetController extends StateNotifier<bool> {
         text: text,
         context: context,
         repliedTo: '',
+        repliedToUserId: repliedToUserId,
       );
     } else {
       // for only text tweet
       _shareTextTweet(
         text: text,
         context: context,
+        repliedTo: repliedTo,
+        repliedToUserId: repliedToUserId,
       );
     }
   }
@@ -145,6 +157,7 @@ class TweetController extends StateNotifier<bool> {
     required String text,
     required BuildContext context,
     required String repliedTo,
+    required String repliedToUserId,
   }) async {
     state = true;
     final hashtags = _getHashTagFromText(text);
@@ -167,14 +180,25 @@ class TweetController extends StateNotifier<bool> {
       repliedTo: '',
     );
     final res = await _tweetAPI.shareTweet(tweet);
+    res.fold((l) => showSnackBar(context, l.message), (r) {
+      if (repliedTo.isNotEmpty) {
+        _notificationController.createNotificatio(
+          text: '${user.name} replied to your tweet',
+          postId: r.$id,
+          uid: repliedToUserId,
+          notificationType: NotificationType.reply,
+        );
+      }
+    });
     state = false;
-    res.fold((l) => showSnackBar(context, l.message), (r) => null);
   }
 
   void _shareTextTweet({
     //private function for only text tweet
     required String text,
     required BuildContext context,
+    required String repliedTo,
+    required String repliedToUserId,
   }) async {
     state = true;
     final hashtags = _getHashTagFromText(text);
@@ -196,8 +220,17 @@ class TweetController extends StateNotifier<bool> {
       repliedTo: '',
     );
     final res = await _tweetAPI.shareTweet(tweet);
+    res.fold((l) => showSnackBar(context, l.message), (r) {
+      if (repliedTo.isNotEmpty) {
+        _notificationController.createNotificatio(
+          text: '${user.name} replied to your tweet',
+          postId: r.$id,
+          uid: repliedToUserId,
+          notificationType: NotificationType.reply,
+        );
+      }
+    });
     state = false;
-    res.fold((l) => showSnackBar(context, l.message), (r) => null);
   }
 
   String _getLinkFromText(String text) {
